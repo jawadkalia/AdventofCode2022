@@ -6,12 +6,11 @@ fn main() {
 
     // Calculate day1_a answer
     let day1_a = &parsed_value.iter().max().unwrap().to_owned();
+    println!("Day 1a answer is {}", day1_a);
     
     // Calculate day2_a answer
     let parsed_binary_heap = BinaryHeap::from(parsed_value);
-
-    println!("Day 1a answer is {}", day1_a);
-    println!("Day 1b answer is {:#?}", &parsed_binary_heap.iter().take(3).sum::<u32>());
+    println!("Day 1b answer is {:#?}", parsed_binary_heap.iter().take(3).sum::<u32>());
     
 }
 
