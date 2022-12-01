@@ -8,16 +8,11 @@ fn main() {
     let day1_a = &parsed_value.iter().max().unwrap().to_owned();
     
     // Calculate day2_a answer
-    let mut vec_of_3 = Vec::new();
-
-    let mut parsed_binary_heap = BinaryHeap::from(parsed_value);
-    for _i in 0..3 {
-        vec_of_3.push(parsed_binary_heap.pop().unwrap());
-    }
+    let parsed_binary_heap = BinaryHeap::from(parsed_value);
 
     println!("Day 1a answer is {}", day1_a);
-    println!("Day 1b answer is {}", vec_of_3.iter().sum::<u32>());
-    // println!("Day 1b answer is {:#?}", vec_of_3);
+    println!("Day 1b answer is {:#?}", &parsed_binary_heap.iter().take(3).sum::<u32>());
+    
 }
 
 fn parse_into_vector_of_sums() -> Vec<u32> {
