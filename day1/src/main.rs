@@ -1,5 +1,14 @@
 fn main() {
-    let value = include_str!("../input.txt")
+    let value = parse_into_vector_of_sums()
+        .iter()
+        .max()
+        .unwrap()
+        .to_owned();
+    println!("Day 1a answer is {:#?}", value);
+}
+
+fn parse_into_vector_of_sums() -> Vec<u32> {
+    include_str!("../input.txt")
         .split("\n\n")
         .collect::<Vec<&str>>()
         .iter()
@@ -11,9 +20,4 @@ fn main() {
                 .sum::<u32>()
         })
         .collect::<Vec<u32>>()
-        .iter()
-        .max()
-        .unwrap()
-        .to_owned();
-    println!("{:#?}", value);
 }
