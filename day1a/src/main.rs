@@ -4,7 +4,7 @@ fn main() {
         .collect::<Vec<&str>>()
         .iter()
         .map(|n| {
-            n.split("\n")
+            n.lines()
                 .map(|calorie| calorie.parse::<u32>().unwrap())
                 .collect::<Vec<u32>>()
                 .iter()
