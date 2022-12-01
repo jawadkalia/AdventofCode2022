@@ -15,9 +15,9 @@ fn main() {
         vec_of_3.push(parsed_binary_heap.pop().unwrap());
     }
 
-    println!("Day 1a answer is {:#?}", day1_a);
+    println!("Day 1a answer is {}", day1_a);
     println!("Day 1b answer is {}", vec_of_3.iter().sum::<u32>());
-    println!("Day 1b answer is {:#?}", vec_of_3);
+    // println!("Day 1b answer is {:#?}", vec_of_3);
 }
 
 fn parse_into_vector_of_sums() -> Vec<u32> {
