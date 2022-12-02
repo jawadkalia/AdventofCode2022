@@ -1,4 +1,4 @@
-use crate::{plays::Plays, WINNING_SCORE};
+use crate::{plays::Plays, WINNING_SCORE, LOSING_SCORE, DRAW_SCORE};
 
 #[derive(Debug)]
 pub enum RoundResult {
@@ -20,13 +20,13 @@ impl RoundResult {
     fn win_calculation(p: (&Plays, &Plays)) -> usize {
         p.1.hand_score() + WINNING_SCORE
     }
+
     fn lose_calculation(p: (&Plays, &Plays)) -> usize {
-       p.1.hand_score() - match p.0 {
-        Plays::Rock => 1,
-        _ => 0
+        p.1.hand_score() + LOSING_SCORE
     }
-    }
+    
+
     fn draw_calculation(p: (&Plays, &Plays)) -> usize {
-        p.0.hand_score() + p.1.hand_score() 
+        p.1.hand_score() + DRAW_SCORE
     }
 }
