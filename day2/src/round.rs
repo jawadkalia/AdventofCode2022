@@ -7,8 +7,6 @@ pub struct Round {
     opponnent_hand: Plays,
 }
 
-
-
 impl Round {
     pub fn from_vec_of_two(a: &Vec<&str>) -> Self {
         Self {
@@ -18,7 +16,7 @@ impl Round {
     }
 
     pub fn score(&self) -> usize {
-        let p = (&self.self_hand, &self.opponnent_hand);
+        let p = (&self.opponnent_hand, &self.self_hand);
         match p {
             (Plays::Rock, Plays::Rock) => RoundResult::Draw.score(p),
             (Plays::Rock, Plays::Paper) => RoundResult::Win.score(p),

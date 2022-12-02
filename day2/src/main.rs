@@ -8,7 +8,8 @@ fn main() {
             
     }).next();
 
-    // dbg!(&data);
     let final_score = data.unwrap().iter().sum::<usize>();
-    dbg!(final_score);
+
+    println!("day2_a answer is {}", final_score);
 }
+

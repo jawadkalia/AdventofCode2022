@@ -25,7 +25,6 @@ impl RoundResult {
         p.1.hand_score() + LOSING_SCORE
     }
     
-
     fn draw_calculation(p: (&Plays, &Plays)) -> usize {
         p.1.hand_score() + DRAW_SCORE
     }
