@@ -3,7 +3,6 @@ pub enum Plays {
     Rock,
     Paper,
     Scissors,
-    Other,
 }
 
 impl Plays {
@@ -15,7 +14,7 @@ impl Plays {
             "A" => Plays::Rock,
             "B" => Plays::Paper,
             "C" => Plays::Scissors,
-            _ => Plays::Other,
+            _ => unreachable!(),
         }
     }
 
@@ -24,7 +23,6 @@ impl Plays {
             Plays::Rock => 1,
             Plays::Paper => 2,
             Plays::Scissors => 3,
-            Plays::Other => 0,
         }
     }
 }
