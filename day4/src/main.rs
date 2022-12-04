@@ -3,7 +3,7 @@ use std::{collections::HashSet, vec};
 fn main() {
     let mut count = 0;
 
-    let data = include_str!("../input.txt")
+    include_str!("../input.txt")
         .lines()
         .map(|f| {
             f.split(',')
@@ -17,19 +17,21 @@ fn main() {
         .map(two_sized_vector_to_tuple)
         .for_each(|((a, b), (c, d))| {
             if (a <= c && b >= d) || (c <= a && d >= b) {
-                println!("found");
                 count += 1;
             } else {
-                println!("not found");
             }
         });
 
-    dbg!(data);
+    // dbg!(data);
+    dbg!(count);
 }
 
-pub fn two_sized_vector_to_tuple(data: Vec<Vec<usize>>) -> Vec<(usize, usize)> {
-    let mut value = Vec::new();
-    data.iter()
-        .for_each(|f| value.push((f.first(), f.get(1).unwrap())));
+pub fn two_sized_vector_to_tuple(data: Vec<Vec<usize>>) -> ((usize, usize), (usize, usize)) {
+    let mut value = ((0, 0), (0, 0));
+    value.0 .0 = data[0][0];
+    value.0 .1 = data[0][1];
+    value.1 .0 = data[1][0];
+    value.1 .1 = data[1][1];
+    // dbg!(&value);
     value
 }
