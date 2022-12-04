@@ -1,3 +1,4 @@
+use array_tool::vec::Intersect;
 use std::collections::HashMap;
 
 fn main() {
@@ -6,14 +7,20 @@ fn main() {
         .map(|s| {
             s.lines()
                 .map(|s| s.chars().collect::<Vec<char>>())
-                .collect::<Vec<Vec<char>>>()
-                .iter()
-                .map(|s| println!("{:#?}", s))
-                .next()
+                .map(|s| {
+                    let tuples_vecs = s.split_at(s.len() / 2);
+                    tuples_vecs
+                        .0
+                        .to_owned()
+                        .intersect(tuples_vecs.1.to_owned())
+                        .iter()
+                        .map(get_priority)
+                        .sum::<usize>()
+                })
+                .sum::<usize>()
         })
         .next();
-
-    dbg!(value);
+    println!("Day 3 a value is {}", value.unwrap());
 }
 
 fn get_priority(character: &char) -> usize {
