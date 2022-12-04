@@ -25,6 +25,7 @@ fn double_intersection(s: &str) -> usize {
             tuples_vecs
                 .0
                 .to_owned()
+                // TODO: use HASHSET here
                 .intersect(tuples_vecs.1.to_owned())
                 .iter()
                 .map(get_priority)
