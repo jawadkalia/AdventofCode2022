@@ -1,20 +1,18 @@
 use std::{char, collections::VecDeque};
 
 fn main() {
-    // let word = parse_input();
-    // let mut ship = Ship::new();
-    // word.clone().iter().for_each(|f| {
-    //     if f.first().unwrap() == "move" {
-    //         dbg!(f);
-    //         let amount = f[1].parse::<usize>().unwrap();
-    //         let from = f[3].parse::<usize>().unwrap() - 1;
-    //         let to = f[5].parse::<usize>().unwrap() - 1;
-    //         ship.instructions.push(Move { from, amount, to });
-    //     }
-    // });
+    let word = parse_input();
+    let mut ship = Ship::new();
+    word.clone().iter().for_each(|f| {
+        if f.first().unwrap() == "move" {
+            let amount = f[1].parse::<usize>().unwrap();
+            let from = f[3].parse::<usize>().unwrap() - 1;
+            let to = f[5].parse::<usize>().unwrap() - 1;
+            let _ = &ship.instructions.push(Move { from, amount, to });
+        }
+    });
 
-    let binding = ship_input();
-    let sinput = binding
+    ship_input()
         .lines()
         .filter(|f| f.contains("["))
         .map(|f| {
@@ -24,9 +22,41 @@ fn main() {
                 .map(|f| (((f.0 - 1) / 4) + 1, f.1))
                 .collect::<Vec<_>>()
         })
-        .collect::<Vec<_>>();
+        .collect::<Vec<Vec<(usize, char)>>>()
+        .iter()
+        .for_each(|info| {
+            info.iter().for_each(|(a, b)| {
+                while ship.ship_crates.len() < a.to_owned() {
+                    ship.ship_crates.push(VecDeque::new());
+                }
+                ship.ship_crates[*a - 1].push_front(*b);
+            });
+        });
 
-    dbg!(sinput.clone());
+    // ship.instructions.iter().for_each(|f| {
+    //     for _ in 0..f.amount {
+    //         let ship_crate = ship.ship_crates[f.from].pop_back().unwrap();
+    //         ship.ship_crates[f.to].push_back(ship_crate)
+    //     }
+    // });
+
+    // let mut answer = "".to_string();
+    // for stack in &ship.ship_crates {
+    //     answer.push(*stack.back().unwrap());
+    // }
+
+    let mut answer2 = "".to_string();
+    ship.instructions.iter().for_each(|f|{
+        let split_point = ship.ship_crates[f.from].len() - f.amount;
+        let mut removed = ship.ship_crates[f.from].split_off(split_point);
+        ship.ship_crates[f.to].append(&mut removed);
+    });
+    for stack in &ship.ship_crates {
+        answer2.push(*stack.back().unwrap());
+    }
+
+    dbg!(answer2);
+
 }
 
 pub fn parse_input() -> Vec<Vec<String>> {
@@ -61,6 +91,7 @@ pub struct Ship {
 
 impl Ship {
     pub fn new() -> Ship {
+        
         Ship::default()
     }
 }
