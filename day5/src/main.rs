@@ -33,25 +33,30 @@ fn main() {
             });
         });
 
-    // ship.instructions.iter().for_each(|f| {
-    //     for _ in 0..f.amount {
-    //         let ship_crate = ship.ship_crates[f.from].pop_back().unwrap();
-    //         ship.ship_crates[f.to].push_back(ship_crate)
-    //     }
-    // });
+    let mut ship2 = ship.clone();
 
-    // let mut answer = "".to_string();
-    // for stack in &ship.ship_crates {
-    //     answer.push(*stack.back().unwrap());
-    // }
+
+    ship.instructions.iter().for_each(|f| {
+        for _ in 0..f.amount {
+            let ship_crate = ship.ship_crates[f.from].pop_back().unwrap();
+            ship.ship_crates[f.to].push_back(ship_crate)
+        }
+    });
+
+    let mut answer = "".to_string();
+    for stack in &ship.ship_crates {
+        answer.push(*stack.back().unwrap());
+    }
+
+    dbg!(answer);
 
     let mut answer2 = "".to_string();
-    ship.instructions.iter().for_each(|f|{
-        let split_point = ship.ship_crates[f.from].len() - f.amount;
-        let mut removed = ship.ship_crates[f.from].split_off(split_point);
-        ship.ship_crates[f.to].append(&mut removed);
+    ship2.instructions.iter().for_each(|f|{
+        let split_point = ship2.ship_crates[f.from].len() - f.amount;
+        let mut removed = ship2.ship_crates[f.from].split_off(split_point);
+        ship2.ship_crates[f.to].append(&mut removed);
     });
-    for stack in &ship.ship_crates {
+    for stack in &ship2.ship_crates {
         answer2.push(*stack.back().unwrap());
     }
 
@@ -83,7 +88,7 @@ pub fn move_input() -> String {
         .to_owned()
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Ship {
     ship_crates: Vec<VecDeque<char>>,
     instructions: Vec<Move>,
@@ -96,35 +101,10 @@ impl Ship {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Move {
     amount: usize,
     from: usize,
     to: usize,
 }
 
-pub fn transpose2<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>> {
-    assert!(!v.is_empty());
-    let len = v[0].len();
-    let mut iters: Vec<_> = v.into_iter().map(|n| n.into_iter()).collect();
-    (0..len)
-        .map(|_| {
-            iters
-                .iter_mut()
-                .map(|n| n.next().unwrap())
-                .collect::<Vec<T>>()
-        })
-        .collect()
-}
-
-// if f.1.contains('[') {
-//     dbg!(f.0 + 1/ 9);
-//     dbg!(f.1);
-//    f.1.chars().enumerate().map(|f| {dbg!(&f); f}).filter(|(a, b)| *b != ' ' && (a + 3) % 4 == 0).for_each(|f| {
-//     // dbg!(f.1);
-//     // while ship.instructions.len() < stack + 1 {
-//     //     ship.ship_crates.push(VecDeque::new())
-
-//     // }
-//     // ship.ship_crates[stack].push_front(f.1);
-//    }
