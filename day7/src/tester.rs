@@ -1,6 +1,6 @@
 use std::iter::Peekable;
 
-pub fn main() {
+pub fn tester() {
     let (d, mut s) = (include_bytes!("../input.txt"), 0);
     sh(&mut d.split(|b| b == &b'\n').peekable(), &mut s);
     println!("{}", s);

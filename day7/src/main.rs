@@ -1,90 +1,117 @@
-use std::collections::HashMap;
+use std::{cell::RefCell, collections::HashMap, rc::Rc, usize};
 
 fn main() {
-    let mut dirs: HashMap<String, u32> = HashMap::new();
-
-    let value = include_str!("../test.txt").lines().collect::<Vec<_>>();
-    let value2 = value
-        .iter()
-        .map(|f| f.trim().split(" ").collect::<Vec<&str>>())
-        .collect::<Vec<Vec<&str>>>();
-    let mut current_path: Vec<String> = Vec::new();
-    value2.iter().for_each(|f| {
-        match f.first().unwrap().to_owned() {
-            "$" => {
-                Commands::from_str(f.last().unwrap()).update_path(&mut current_path);
-                // dbg!(current_path.clone());
+    let mut day7 = Day7::new();
+    let mut cwd = Rc::clone(&day7.root);
+    input().iter().for_each(|line| {
+        let words = line.split(' ').collect::<Vec<&str>>();
+        match (words[0], words[1]) {
+            ("$", "ls") => {}
+            ("$", "cd") => match words[2] {
+                "/" => cwd = Rc::clone(&day7.root),
+                ".." => {
+                    cwd = Rc::clone(cwd.parent.as_ref().unwrap());
+                }
+                dirname => {
+                    let newdir = cwd.subdir.borrow().get(dirname).unwrap().clone();
+                    cwd = newdir;
+                }
+            },
+            ("dir", dirname) => {
+                cwd.subdir.borrow_mut().insert(
+                    dirname.to_string(),
+                    Rc::new(Dir {
+                        _name: dirname.to_string(),
+                        size: RefCell::new(0),
+                        parent: Some(Rc::clone(&cwd)),
+                        subdir: RefCell::new(HashMap::new()),
+                    }),
+                );
             }
-            "dir" => {
-                // current_path.pop();
-                current_path.push(f.last().unwrap().to_string());
-                // dbg!(current_path.clone());
+            (size, _name) => {
+                *cwd.size.borrow_mut() += size.parse::<usize>().unwrap();
             }
-            _s => {
-                // current_path.push(f.last().unwrap().to_string());
-                // dbg!(current_path.clone());
-            }
-        }
-        let pwd = current_path.join("/");
-        if !dirs.contains_key(&pwd) {
-            dirs.insert(pwd, 0);
         }
     });
-
-    let mut dirs1: HashMap<String, u32> = HashMap::new();
-    dirs1.clone_from(&dirs);
-
-    let mut dirs2: HashMap<String, u32> = HashMap::new();
-    dirs2.clone_from(&dirs);
-
-    for (directory_path, size) in dirs1 {
-        for d in dirs.keys() {
-            if directory_path.starts_with(d) && !directory_path.eq(d) {
-                let dir_size = dirs2.get(d).unwrap();
-
-                dirs2.insert(d.to_string(), dir_size + size);
-            }
-        }
-    }
-
-    let answer1: u32 = dirs2.values().filter(|&f| *f < 100_000).sum();
-
-    println!("Total size: {answer1}");
+    println!("Day 7 a {:?}", day7.part1());
+    println!("Day 7 b {:?}", day7.part2());
 }
 
-enum Commands {
-    CdTopLevel,
-    CdMoveUp,
-    Ls,
-    Dir(String),
+#[derive(Debug, Default)]
+struct Dir {
+    _name: String,
+    size: RefCell<usize>,
+    parent: Option<Rc<Dir>>,
+    subdir: RefCell<HashMap<String, Rc<Dir>>>,
 }
 
-impl Commands {
-    fn from_str(s: &str) -> Commands {
-        match s {
-            "/" => Commands::CdTopLevel,
-            "ls" => Commands::Ls,
-            ".." => Commands::CdMoveUp,
-            _ => Commands::Dir(s.to_string()),
-        }
+impl Dir {
+    fn get_size(&self) -> usize {
+        *self.size.borrow()
+            + self
+                .subdir
+                .borrow()
+                .values()
+                .fold(0, |a, b| a + b.get_size())
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct Day7 {
+    root: Rc<Dir>,
+}
+
+impl Day7 {
+    pub fn new() -> Self {
+        Self::default()
     }
 
-    fn update_path(self, path: &mut Vec<String>) {
-        match self {
-            Commands::CdTopLevel => {
-                path.clear();
-                path.push("/".to_string());
+    pub fn part1(&mut self) -> usize {
+        let mut to_visit = vec![Rc::clone(&self.root)];
+        let mut total = 0;
+
+        while let Some(dir) = to_visit.pop() {
+            for d in dir.subdir.borrow().values() {
+                to_visit.push(Rc::clone(d));
             }
-            Commands::CdMoveUp => {
-                path.pop();
-            }
-            Commands::Ls => {
-                path.push("/".to_string());
-            }
-            Commands::Dir(a) => {
-                dbg!(path.clone());
-                path.push(a);
+            let size = dir.get_size();
+            if size <= 100_000 {
+                total += size;
             }
         }
+        total
     }
+
+    fn part2(&self) -> u32 {
+        let total_size = self.root.get_size();
+        let free_space = 70000000 - total_size;
+        let space_needed = 30000000 - free_space;
+        let mut to_visit = vec![Rc::clone(&self.root)];
+        let mut best = usize::MAX;
+
+        while let Some(dir) = to_visit.pop() {
+            for d in dir.subdir.borrow().values() {
+                to_visit.push(Rc::clone(d));
+            }
+            let size = dir.get_size();
+            if size >= space_needed {
+                best = best.min(size);
+            }
+        }
+        best.try_into().unwrap()
+    }
+}
+
+pub fn input() -> Vec<String> {
+    include_str!("../input.txt")
+        .lines()
+        .map(|l| l.to_string())
+        .collect::<Vec<String>>()
+}
+
+pub fn input_test() -> Vec<String> {
+    include_str!("../test.txt")
+        .lines()
+        .map(|l| l.to_string())
+        .collect::<Vec<String>>()
 }
