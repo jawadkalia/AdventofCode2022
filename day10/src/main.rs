@@ -1,6 +1,7 @@
 use day10::{
     input::{input, input_test},
     instruction::Instruction,
+    machine::Machine,
 };
 
 fn main() {
@@ -11,44 +12,47 @@ fn main() {
     });
 
     dbg!(day10.part1());
+    dbg!(day10.part2());
 }
 
 #[derive(Debug, Default)]
 struct Day10 {
     statements: Vec<Instruction>,
-    display_crt: Vec<String>,
+    machine: Machine,
 }
 
 impl Day10 {
     fn part1(&mut self) -> i32 {
         let mut signal_strength = 0;
-        let mut x_register = 1;
-        let mut cycle = 0;
+        self.machine.init();
         let mut check = 20;
 
         self.statements.iter().for_each(|ele| match ele {
             Instruction::AddX(value) => {
-                cycle += 2;
-                if cycle >= check {
-                    signal_strength += check * x_register;
-                    println!("At cycle {check}, signal = {}", cycle * x_register);
+                let prev_xreg = self.machine.xreg;
+                self.machine.addx(*value);
+                if self.machine.current_cycle >= check {
+                    signal_strength += check * prev_xreg;
                     check += 40;
                 }
-                x_register += value;
             }
             Instruction::Noop => {
-                cycle += 1;
-                if cycle >= check {
-                    signal_strength += cycle * x_register;
-                    println!("At cycle {check}, signal = {}", cycle * x_register);
+                self.machine.noop();
+                if self.machine.current_cycle >= check {
+                    signal_strength += self.machine.current_cycle * self.machine.xreg;
+                    println!(
+                        "At cycle {check}, signal = {}",
+                        self.machine.current_cycle * self.machine.xreg
+                    );
                     check += 40;
                 }
             }
         });
+        self.machine.noop();
         signal_strength
     }
 
     fn part2(&self) -> Vec<String> {
-        self.display_crt.clone()
+        self.machine.crt.clone()
     }
 }
