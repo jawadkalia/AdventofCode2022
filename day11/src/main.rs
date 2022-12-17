@@ -1,13 +1,11 @@
-use std::collections::HashMap;
-
 use day11::{
+    day11::Day11,
     input::{input, input_test},
     monkey::Monkey,
 };
 
 fn main() {
-    let value = input_test();
-    // dbg!(value.clone());
+    let value = input();
     let mut day11 = Day11::default();
     value
         .iter()
@@ -17,10 +15,7 @@ fn main() {
                 .monkeys
                 .insert(monkey_number, Monkey::from_words(monkey_input));
         });
-    dbg!(day11);
-}
 
-#[derive(Debug, Default)]
-struct Day11 {
-    monkeys: HashMap<usize, Monkey>,
+    let day11_1 = day11.part1();
+    println!("day11 part 1: {}", day11_1)
 }

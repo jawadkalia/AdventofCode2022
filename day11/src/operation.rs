@@ -7,3 +7,15 @@ pub enum Operation {
     AddSelf,
     MultiplySelf,
 }
+
+impl Operation {
+    pub fn calc(&self, val: u32) -> u32 {
+        match self {
+            Operation::Noop => val,
+            Operation::Add(n) => val + n,
+            Operation::Multiply(n) => val * n,
+            Operation::AddSelf => val + val,
+            Operation::MultiplySelf => val * val,
+        }
+    }
+}

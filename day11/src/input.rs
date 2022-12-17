@@ -2,7 +2,7 @@ pub fn input() -> Vec<Vec<String>> {
     let value = include_str!("../input.txt")
         .trim()
         .lines()
-        .map(|l| l.to_string())
+        .map(|l| l.trim().to_string())
         .collect::<Vec<String>>()
         .chunks(7)
         .map(|f| f.to_vec())

@@ -1,10 +1,12 @@
+use std::collections::VecDeque;
+
 use crate::operation::Operation;
 
 #[derive(Debug, Default, Clone)]
 pub struct Monkey {
-    pub items: Vec<u32>,
+    pub items: VecDeque<u32>,
     pub operation: Operation,
-    pub worry_test: i32,
+    pub worry_test: u32,
     pub counts: u32,
     pub destination: (u32, u32),
 }
@@ -16,13 +18,11 @@ impl Monkey {
             .iter()
             .map(|sentences| sentences.split(' ').collect::<Vec<_>>())
             .for_each(|words| match *words.first().unwrap() {
-                "Monkey" => {
-                    println!("found monkey")
-                }
+                "Monkey" => (),
                 "Starting" => words[2..].iter().for_each(|f| {
                     let item = f.replace(',', "").parse::<u32>().unwrap();
                     // println!("pushing item {item}");
-                    monkey.items.push(item);
+                    monkey.items.push_back(item);
                     // dbg!(monkey.clone().items);
                 }),
                 "Operation:" => match words[4] {
@@ -45,9 +45,7 @@ impl Monkey {
                     _ => unreachable!(),
                 },
 
-                a => {
-                    println!("unreachable {a}")
-                }
+                _ => (),
             });
 
         // dbg!(array);
