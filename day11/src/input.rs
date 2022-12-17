@@ -1,20 +1,25 @@
-pub fn input() -> Vec<String> {
-    include_str!("../input.txt")
+pub fn input() -> Vec<Vec<String>> {
+    let value = include_str!("../input.txt")
         .trim()
         .lines()
         .map(|l| l.to_string())
         .collect::<Vec<String>>()
+        .chunks(7)
+        .map(|f| f.to_vec())
+        .collect::<Vec<Vec<String>>>();
+    value
 }
 
-pub fn input_test() -> Vec<&str> {
-    include_str!("../test.txt")
+pub fn input_test() -> Vec<Vec<String>> {
+    let value = include_str!("../test.txt")
         .trim()
         .lines()
-        .collect::<Vec<&str>>()
-        .split(|f| *f == "").
-        .collect::<Vec<&str>>()
-    // .map(|l| l.trim().split(' ').collect::<Vec<&str>>())
-    // .collect::<Vec<Vec<&str>>>()
+        .map(|l| l.to_string())
+        .collect::<Vec<String>>()
+        .chunks(7)
+        .map(|f| f.to_vec())
+        .collect::<Vec<Vec<String>>>();
+    value
 }
 
 // pub fn input2() -> Vec<String> {

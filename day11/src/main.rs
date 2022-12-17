@@ -4,7 +4,7 @@ use day11::{
 };
 
 fn main() {
-    let value = input_test();
+    let value = input();
 
     println!("{:#?}", value);
 }
