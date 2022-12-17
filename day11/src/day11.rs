@@ -1,6 +1,9 @@
 use std::collections::{BinaryHeap, HashMap};
 
-use crate::{monkey::Monkey, round::round};
+use crate::{
+    monkey::Monkey,
+    round::{round, round2},
+};
 
 #[derive(Debug, Default, Clone)]
 pub struct Day11 {
@@ -20,5 +23,22 @@ impl Day11 {
             .map(|f| f.counts)
             .collect::<BinaryHeap<_>>();
         monkey_buisness.iter().take(2).product::<u32>()
+    }
+
+    pub fn part2(&mut self) -> u64 {
+        let mut part2 = self.clone();
+
+        for _ in 0..10000 {
+            round2(&mut part2);
+        }
+        let mut monkey_buisness = part2
+            .monkeys
+            .values()
+            .map(|f| f.counts)
+            .collect::<BinaryHeap<_>>();
+        let value = u64::from(
+            monkey_buisness.pop().unwrap() as u64 * monkey_buisness.pop().unwrap() as u64,
+        );
+        value
     }
 }

@@ -17,5 +17,8 @@ fn main() {
         });
 
     let day11_1 = day11.part1();
-    println!("day11 part 1: {}", day11_1)
+    println!("day11 part 1: {}", day11_1);
+
+    let day11_2 = day11.part2();
+    println!("day11 part 2: {}", day11_2);
 }

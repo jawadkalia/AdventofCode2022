@@ -4,9 +4,9 @@ use crate::operation::Operation;
 
 #[derive(Debug, Default, Clone)]
 pub struct Monkey {
-    pub items: VecDeque<u32>,
+    pub items: VecDeque<u64>,
     pub operation: Operation,
-    pub worry_test: u32,
+    pub worry_test: u64,
     pub counts: u32,
     pub destination: (u32, u32),
 }
@@ -20,7 +20,7 @@ impl Monkey {
             .for_each(|words| match *words.first().unwrap() {
                 "Monkey" => (),
                 "Starting" => words[2..].iter().for_each(|f| {
-                    let item = f.replace(',', "").parse::<u32>().unwrap();
+                    let item = f.replace(',', "").parse::<u64>().unwrap();
                     // println!("pushing item {item}");
                     monkey.items.push_back(item);
                     // dbg!(monkey.clone().items);
@@ -48,7 +48,6 @@ impl Monkey {
                 _ => (),
             });
 
-        // dbg!(array);
         monkey
     }
 }
